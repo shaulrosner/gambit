@@ -98,3 +98,13 @@ void setitem(C &p_container, const X &p_index, const T &p_value)
 // Convert the (C-style) string p_value to a Rational
 inline Rational to_rational(const char *p_value)
 { return lexical_cast<Rational>(std::string(p_value)); }
+
+template <class T>
+std::list<T *> make_list_of_pointer(const std::list<T> &p_list)
+{
+  std::list<T *> result;
+  for (auto element : p_list) {
+    result.push_back(new T(element));
+  }
+  return result;
+}

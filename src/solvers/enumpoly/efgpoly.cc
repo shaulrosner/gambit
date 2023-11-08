@@ -26,7 +26,7 @@
 
 using namespace Gambit;
 
-#include "efgensup.h"
+#include "solvers/nashsupport/nashsupport.h"
 #include "sfg.h"
 #include "gpoly.h"
 #include "gpolylst.h"
@@ -386,26 +386,25 @@ void PrintSupport(std::ostream &p_stream,
 
 void EnumPolySolveExtensive(const Game &p_game)
 {
-  List<BehaviorSupportProfile> supports(PossibleNashSubsupports(BehaviorSupportProfile(p_game)));
+  auto possible_supports = PossibleNashBehaviorSupports(p_game);
 
-  for (int i = 1; i <= supports.Length(); i++) {
+  for (auto support : possible_supports->m_supports) {
     if (g_verbose) {
-      PrintSupport(std::cout, "candidate", supports[i]);
+      PrintSupport(std::cout, "candidate", support);
     }
       
     bool isSingular = false;
-    List<MixedBehaviorProfile<double> > newsolns = 
-      SolveSupport(supports[i], isSingular);
+    List<MixedBehaviorProfile<double> > newsolns = SolveSupport(support, isSingular);
 
     for (int j = 1; j <= newsolns.Length(); j++) {
       MixedBehaviorProfile<double> fullProfile = ToFullSupport(newsolns[j]);
       if (fullProfile.GetLiapValue(true) < 1.0e-6) {
-	PrintProfile(std::cout, "NE", fullProfile);
+        PrintProfile(std::cout, "NE", fullProfile);
       }
     }
       
     if (isSingular && g_verbose) {
-      PrintSupport(std::cout, "singular", supports[i]);
+      PrintSupport(std::cout, "singular", support);
     }
   }
 }

@@ -79,7 +79,7 @@ PVector<int> BehaviorSupportProfile::NumActions() const
   }
 
   return answer;
-}  
+}
 
 size_t BehaviorSupportProfile::BehaviorProfileLength() const
 {
@@ -129,15 +129,6 @@ bool BehaviorSupportProfile::RemoveAction(const GameAction &s)
   }
 }
 
-bool BehaviorSupportProfile::RemoveAction(const GameAction &s, List<GameInfoset> &list)
-{
-  for (const auto& node : GetMembers(s->GetInfoset())) {
-    DeactivateSubtree(node->GetChild(s->GetNumber()), list);
-  }
-  // the following returns false if s was not in the support
-  return RemoveAction(s);
-}
-
 void BehaviorSupportProfile::AddAction(const GameAction &s)
 {
   GameInfoset infoset = s->GetInfoset();
@@ -167,7 +158,7 @@ void BehaviorSupportProfile::AddAction(const GameAction &s)
 
 std::list<GameInfoset>
 BehaviorSupportProfile::GetInfosets(const GamePlayer &p_player) const
-{ 
+{
   std::list<GameInfoset> answer;
   for (const auto& infoset : p_player->GetInfosets()) {
     if (m_infosetReachable.at(infoset)) {
@@ -413,24 +404,6 @@ bool BehaviorSupportProfile::IsDominated(const GameAction &a,
   return SomeElementDominates(*this,array,a,strong,conditional);
 }
 
-bool InfosetHasDominatedElement(const BehaviorSupportProfile &S, 
-				const GameInfoset &p_infoset,
-				bool strong,
-				bool conditional)
-{
-  int pl = p_infoset->GetPlayer()->GetNumber();
-  int iset = p_infoset->GetNumber();
-  Array<GameAction> actions;
-  for (int act = 1; act <= S.NumActions(pl, iset); act++) {
-    actions.push_back(S.GetAction(pl, iset, act));
-  }
-  for (int i = 1; i <= actions.Length(); i++)
-    if (SomeElementDominates(S,actions,actions[i],
-			     strong,conditional))
-      return true;
-
-  return false;
-}
 
 bool ElimDominatedInInfoset(const BehaviorSupportProfile &S, BehaviorSupportProfile &T,
 			    int pl, int iset, 

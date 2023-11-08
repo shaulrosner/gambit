@@ -418,11 +418,14 @@ gambit_enummixed_SOURCES = \
 	src/solvers/enummixed/enummixed.h \
 	src/tools/enummixed/enummixed.cc
 
+gambit_nashsupport_SOURCES = \
+	src/solvers/nashsupport/efgsupport.cc \
+	src/solvers/nashsupport/nfgsupport.cc \
+	src/solvers/nashsupport/nashsupport.h
 
-# For enumpoly, sources starting in 'pel' are from Pelican;
-# sources from gpartltr to quiksolv were formerly in convenience lib libpoly.
+# For enumpoly, sources starting in 'pel' are from Pelican.
 gambit_enumpoly_SOURCES = \
-	${core_SOURCES} ${game_SOURCES} \
+	${core_SOURCES} ${game_SOURCES} ${gambit_nashsupport_SOURCES} \
 	src/solvers/enumpoly/pelican/pelclhpk.cc \
 	src/solvers/enumpoly/pelican/pelclhpk.h \
 	src/solvers/enumpoly/pelican/pelclqhl.cc \
@@ -499,16 +502,12 @@ gambit_enumpoly_SOURCES = \
 	src/solvers/enumpoly/linrcomb.cc \
 	src/solvers/enumpoly/linrcomb.h \
 	src/solvers/enumpoly/linrcomb.imp \
-	src/solvers/enumpoly/efgensup.cc \
-	src/solvers/enumpoly/efgensup.h \
 	src/solvers/enumpoly/gnarray.h \
 	src/solvers/enumpoly/gnarray.imp \
 	src/solvers/enumpoly/sfg.cc \
 	src/solvers/enumpoly/sfg.h \
 	src/solvers/enumpoly/sfstrat.cc \
 	src/solvers/enumpoly/sfstrat.h \
-	src/solvers/enumpoly/nfgensup.cc \
-	src/solvers/enumpoly/nfgensup.h \
 	src/solvers/enumpoly/odometer.cc \
 	src/solvers/enumpoly/odometer.h \
 	src/solvers/enumpoly/nfgcpoly.cc \

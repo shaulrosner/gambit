@@ -134,6 +134,15 @@ def _ipa_strategy_solve(game: Game) -> typing.List[MixedStrategyProfileDouble]:
 def _gnm_strategy_solve(game: Game) -> typing.List[MixedStrategyProfileDouble]:
     return _convert_mspd(GNMStrategySolve(game.game))
 
+def _nashsupport_strategy_solve(game: Game) -> typing.List[StrategySupportProfile]:
+    ret = []
+    result = PossibleNashStrategySupports(game.game)
+    for c_support in make_list_of_pointer(deref(result).m_supports):
+        support = StrategySupportProfile(list(game.strategies), game)
+        support.support.reset(c_support)
+        ret.append(support)
+    return ret
+
 def _logit_strategy_solve(game: Game) -> typing.List[MixedStrategyProfileDouble]:
     return _convert_mspd(LogitStrategySolve(game.game))
 
