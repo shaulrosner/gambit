@@ -240,14 +240,14 @@ class LogitQREMixedStrategyProfile:
         return profile
 
 
-def logit_estimate(profile: MixedStrategyProfileDouble,
-                   first_step: float = .03,
-                   max_accel: float = 1.1) -> LogitQREMixedStrategyProfile:
+def _logit_strategy_estimate(profile: MixedStrategyProfileDouble,
+                             first_step: float = .03,
+                             max_accel: float = 1.1) -> LogitQREMixedStrategyProfile:
     """Estimate QRE corresponding to mixed strategy profile using
     maximum likelihood along the principal branch.
     """
-    ret = LogitQREMixedStrategyProfile()
-    ret.thisptr = _logit_estimate(profile.profile, first_step, max_accel)
+    ret = LogitQREMixedStrategyProfile(profile.game)
+    ret.thisptr = LogitStrategyEstimateHelper(profile.profile, first_step, max_accel)
     return ret
 
 

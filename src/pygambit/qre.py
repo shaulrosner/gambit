@@ -28,7 +28,9 @@ import math
 import numpy
 import scipy.optimize
 
-from . import gambit, pctrace
+import pygambit.gambit as libgbt
+
+from . import pctrace
 from .profiles import Solution
 
 
@@ -315,7 +317,7 @@ class LogitQREMixedStrategyFitResult:
         return self._method
 
     @property
-    def data(self) -> gambit.MixedStrategyProfileDouble:
+    def data(self) -> libgbt.MixedStrategyProfileDouble:
         """The empirical strategy frequencies used to estimate the QRE."""
         return self._data
 
@@ -325,7 +327,7 @@ class LogitQREMixedStrategyFitResult:
         return self._lam
 
     @property
-    def profile(self) -> gambit.MixedStrategyProfileDouble:
+    def profile(self) -> libgbt.MixedStrategyProfileDouble:
         """The mixed strategy profile corresponding to the QRE."""
         return self._profile
 
@@ -342,7 +344,7 @@ class LogitQREMixedStrategyFitResult:
 
 
 def fit_fixedpoint(
-        data: gambit.MixedStrategyProfileDouble
+        data: libgbt.MixedStrategyProfileDouble
 ) -> LogitQREMixedStrategyFitResult:
     """Use maximum likelihood estimation to find the logit quantal
     response equilibrium on the principal branch for a strategic game
@@ -375,14 +377,14 @@ def fit_fixedpoint(
         as a structural model for estimation: The missing manual.
         SSRN working paper 4425515.
     """
-    res = gambit.logit_estimate(data)
+    res = libgbt.logit_strategy_estimate(data)
     return LogitQREMixedStrategyFitResult(
         data, "fixedpoint", res.lam, res.profile, res.log_like
     )
 
 
 def fit_empirical(
-        data: gambit.MixedStrategyProfileDouble
+        data: libgbt.MixedStrategyProfileDouble
 ) -> LogitQREMixedStrategyFitResult:
     """Use maximum likelihood estimation to estimate a quantal
     response equilibrium using the empirical payoff method.
