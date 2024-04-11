@@ -463,7 +463,7 @@ cdef extern from "solvers/logit/efglogit.h":
         c_MixedBehaviorProfileDouble GetProfile()  # except + doesn't compile
         double GetLambda() except +
         double GetLogLike() except +
-        int MixedBehaviorLength() except +
+        int BehaviorProfileLength() except +
         double getitem "operator[]"(int) except +IndexError
 
     c_List[c_MixedBehaviorProfileDouble] LogitBehaviorSolve(c_Game,

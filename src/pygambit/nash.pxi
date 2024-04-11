@@ -271,3 +271,60 @@ def logit_principal_branch(game: Game, first_step: float = .03, max_accel: float
         p.thisptr = copyitem_list_qrem(solns, i+1)
         ret.append(p)
     return ret
+
+
+@cython.cclass
+class LogitQREMixedBehaviorProfile:
+    thisptr = cython.declare(shared_ptr[c_LogitQREMixedBehaviorProfile])
+
+    def __init__(self, game=None):
+        if game is not None:
+            self.thisptr = make_shared[c_LogitQREMixedBehaviorProfile](
+                cython.cast(Game, game).game
+            )
+
+    def __repr__(self):
+        return f"LogitQREMixedBehaviorProfile(lam={self.lam},profile={self.profile})"
+
+    def __len__(self):
+        return deref(self.thisptr).BehaviorProfileLength()
+
+    def __getitem__(self, int i):
+        return deref(self.thisptr).getitem(i+1)
+
+    @property
+    def game(self) -> Game:
+        """The game on which this mixed strategy profile is defined."""
+        g = Game()
+        g.game = deref(self.thisptr).GetGame()
+        return g
+
+    @property
+    def lam(self) -> double:
+        """The value of the precision parameter."""
+        return deref(self.thisptr).GetLambda()
+
+    @property
+    def log_like(self) -> double:
+        """The log-likelihood of the data."""
+        return deref(self.thisptr).GetLogLike()
+
+    @property
+    def profile(self) -> MixedBehaviorProfileDouble:
+        """The mixed strategy profile."""
+        profile = MixedBehaviorProfileDouble()
+        profile.profile = (
+            make_shared[c_MixedBehaviorProfileDouble](deref(self.thisptr).GetProfile())
+        )
+        return profile
+
+
+def _logit_behavior_estimate(profile: MixedBehaviorProfileDouble,
+                             first_step: float = .03,
+                             max_accel: float = 1.1) -> LogitQREMixedBehaviorProfile:
+    """Estimate QRE corresponding to mixed behavior profile using
+    maximum likelihood along the principal branch.
+    """
+    ret = LogitQREMixedBehaviorProfile(profile.game)
+    ret.thisptr = LogitBehaviorEstimateHelper(profile.profile, first_step, max_accel)
+    return ret
