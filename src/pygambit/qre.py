@@ -379,7 +379,7 @@ def fit_strategy_fixedpoint(
         as a structural model for estimation: The missing manual.
         SSRN working paper 4425515.
     """
-    res = libgbt.logit_strategy_estimate(data)
+    res = libgbt._logit_strategy_estimate(data)
     return LogitQREMixedStrategyFitResult(
         data, "fixedpoint", res.lam, res.profile, res.log_like
     )
@@ -517,7 +517,7 @@ def fit_behavior_fixedpoint(
         as a structural model for estimation: The missing manual.
         SSRN working paper 4425515.
     """
-    res = libgbt.logit_behavior_estimate(data)
+    res = libgbt._logit_behavior_estimate(data)
     return LogitQREMixedBehaviorFitResult(
         data, "fixedpoint", res.lam, res.profile, res.log_like
     )

@@ -251,15 +251,15 @@ def _logit_strategy_estimate(profile: MixedStrategyProfileDouble,
     return ret
 
 
-def logit_atlambda(game: Game,
-                   lam: float,
-                   first_step: float = .03,
-                   max_accel: float = 1.1) -> LogitQREMixedStrategyProfile:
-    """Compute the first QRE along the principal branch with the given
-    lambda parameter.
+def logit_strategy_atlambda(game: Game,
+                            lam: float,
+                            first_step: float = .03,
+                            max_accel: float = 1.1) -> LogitQREMixedStrategyProfile:
+    """Compute the first QRE encountered along the principal branch of the strategic
+    game corresponding to lambda value `lam`.
     """
     ret = LogitQREMixedStrategyProfile()
-    ret.thisptr = _logit_atlambda(game.game, lam, first_step, max_accel)
+    ret.thisptr = LogitStrategyAtLambdaHelper(game.game, lam, first_step, max_accel)
     return ret
 
 
@@ -327,4 +327,16 @@ def _logit_behavior_estimate(profile: MixedBehaviorProfileDouble,
     """
     ret = LogitQREMixedBehaviorProfile(profile.game)
     ret.thisptr = LogitBehaviorEstimateHelper(profile.profile, first_step, max_accel)
+    return ret
+
+
+def logit_behavior_atlambda(game: Game,
+                            lam: float,
+                            first_step: float = .03,
+                            max_accel: float = 1.1) -> LogitQREMixedBehaviorProfile:
+    """Compute the first QRE encountered along the principal branch of the extensive
+    game corresponding to lambda value `lam`.
+    """
+    ret = LogitQREMixedBehaviorProfile()
+    ret.thisptr = LogitBehaviorAtLambdaHelper(game.game, lam, first_step, max_accel)
     return ret

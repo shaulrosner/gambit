@@ -38,6 +38,7 @@ public:
   }
   double GetLambda() const { return m_lambda; }
   const MixedBehaviorProfile<double> &GetProfile() const { return m_profile; }
+  double GetLogLike() const { return m_logLike; }
 
   Game GetGame() const { return m_profile.GetGame(); }
   size_t BehaviorProfileLength() const { return m_profile.BehaviorProfileLength(); }
@@ -100,7 +101,7 @@ LogitBehaviorEstimate(const MixedBehaviorProfile<double> &p_frequencies, double 
   alg.SetMaxDecel(p_maxAccel);
   alg.SetStepsize(p_firstStep);
   std::ostringstream ostream;
-  return alg.Estimate(start, p_frequencies, ostream, 1000000.0, 1.0);
+  return alg.Estimate(start, p_frequencies, ostream, 1.0, 1.0);
 }
 
 inline List<MixedBehaviorProfile<double>> LogitBehaviorSolve(const Game &p_game, double p_epsilon,
