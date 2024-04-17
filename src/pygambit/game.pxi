@@ -295,16 +295,10 @@ class Game:
         g.title = title
         return g
 
-    @classmethod
-    def to_arrays(cls, game: Game) -> typing.List[np.ndarray]:
-        """Create a list of numpy arrays from a game object.
-        These correspond to the payoff matrices of the players of a game.
-        The input game must be in strategic form.
-
-        Parameters
-        ----------
-        game : Game
-            The game for which the payoff matrices are requested
+    def to_arrays(self) -> typing.List[np.ndarray]:
+        """Create a list of numpy arrays from the game.
+        These arrays correspond to the payoff matrices of the players of a game.
+        Can only be used on games in in strategic form.
 
         Returns
         -------
@@ -320,16 +314,16 @@ class Game:
         --------
         from_arrays : Create strategic game and set player labels
         """
-        if game.is_tree:
+        if self.is_tree:
             raise UndefinedOperationError(
                 "Converting to arrays is only applicable to games in strategic form"
             )
         arrays = []
-        payoff_shape = [len(player.strategies) for player in game.players]
-        for player in game.players:
+        payoff_shape = [len(player.strategies) for player in self.players]
+        for player in self.players:
             payoff_matrix = np.zeros(shape=payoff_shape)
             for profile in itertools.product(*(range(s) for s in payoff_shape)):
-                payoff_matrix[profile] = game[profile][player]
+                payoff_matrix[profile] = self[profile][player]
             arrays.append(payoff_matrix)
         return arrays
 
