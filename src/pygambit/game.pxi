@@ -311,10 +311,19 @@ class Game:
         typing.List[np.ndarray]
             The list of numpy arrays corresponding to the payoff matrices of the players.
 
+        Raises
+        ------
+        UndefinedOperationError
+            If called on a game which has an extensive representation.
+
         See Also
         --------
-        to_arrays : Create strategic game and set player labels
+        from_arrays : Create strategic game and set player labels
         """
+        if game.is_tree:
+            raise UndefinedOperationError(
+                "Converting to arrays is only applicable to games in strategic form"
+            )
         arrays = []
         payoff_shape = [len(player.strategies) for player in game.players]
         for player in game.players:
