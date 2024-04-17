@@ -296,6 +296,35 @@ class Game:
         return g
 
     @classmethod
+    def to_arrays(cls, game: Game) -> typing.List[np.ndarray]:
+        """Create a list of numpy arrays from a game object.
+        These correspond to the payoff matrices of the players of a game.
+        The input game must be in strategic form.
+
+        Parameters
+        ----------
+        game : Game
+            The game for which the payoff matrices are requested
+
+        Returns
+        -------
+        typing.List[np.ndarray]
+            The list of numpy arrays corresponding to the payoff matrices of the players.
+
+        See Also
+        --------
+        to_arrays : Create strategic game and set player labels
+        """
+        arrays = []
+        payoff_shape = [len(player.strategies) for player in game.players]
+        for player in game.players:
+            payoff_matrix = np.zeros(shape=payoff_shape)
+            for profile in itertools.product(*(range(s) for s in payoff_shape)):
+                payoff_matrix[profile] = game[profile][player]
+            arrays.append(payoff_matrix)
+        return arrays
+
+    @classmethod
     def from_arrays(cls, *arrays, title: str = "Untitled strategic game") -> Game:
         """Create a new ``Game`` with a strategic representation.
 
