@@ -183,6 +183,26 @@ the top level index is the choice of the first player, the second level index of
 and so on.  Therefore, to create a two-player symmetric game, as in this example, the payoff matrix
 for the second player is transposed before passing to :py:meth:`.Game.from_arrays`.
 
+A strategic game can be returned to array format via :py:meth:`.Game.to_arrays`. This function is
+used by a strategic game object, and returns a list of the numpy arrays corresponding to the
+payoff matrices of the players.
+
+For example, to get back the arrays used to construct the prisoner's dilemma game:
+
+.. ipython:: python
+
+   import numpy as np
+   m = np.array([[8, 2], [10, 5]])
+   g = gbt.Game.from_arrays(m, np.transpose(m))
+   arrays = g.to_arrays()
+   arrays
+
+The arrays returned by :py:meth:`.Game.to_arrays` are all indexed in the same way as the game,
+that is, the first matrix in the list is the payoff matrix of the first player, and so on.
+The numpy arrays default to type float, so if a different type is required, it must be
+specified in the 'dtype' parameter. The input value 'object' can be used to maintain the
+type used by the game object.
+
 
 .. _pygambit.user.numbers:
 

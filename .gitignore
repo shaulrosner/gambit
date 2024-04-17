@@ -20,6 +20,8 @@ _build
 build
 *.egg-info
 *.pyc
+.idea
+
 
 config.guess
 config.sub

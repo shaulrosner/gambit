@@ -30,6 +30,7 @@ Creating, reading, and writing games
 
    Game.new_tree
    Game.new_table
+   Game.to_arrays
    Game.from_arrays
    Game.from_dict
    Game.read_game

@@ -295,6 +295,44 @@ class Game:
         g.title = title
         return g
 
+    def to_arrays(self, dtype: Union[str, np.dtype, Type] = float) -> typing.List[np.ndarray]:
+        """Create a list of numpy arrays from the game.
+        These arrays correspond to the payoff matrices of the players of a game.
+        Can only be used on games in strategic form.
+
+        Parameters
+        ----------
+        dtype : Union[str, np.dtype, Type], optional
+            The type of numpy array to use for the payoff matrices. Default to float.
+
+        Returns
+        -------
+        typing.List[np.ndarray]
+            The list of numpy arrays corresponding to the payoff matrices of the players.
+
+        Raises
+        ------
+        UndefinedOperationError
+            If called on a game which has an extensive representation.
+
+        See Also
+        --------
+        from_arrays : Create game from list-like of array-like
+        from_dict : Create strategic game and set player labels
+        """
+        if self.is_tree:
+            raise UndefinedOperationError(
+                "Converting to arrays is only applicable to games in strategic form"
+            )
+        arrays = []
+        payoff_shape = [len(player.strategies) for player in self.players]
+        for player in self.players:
+            payoff_matrix = np.zeros(shape=payoff_shape, dtype=dtype)
+            for profile in itertools.product(*(range(s) for s in payoff_shape)):
+                payoff_matrix[profile] = self[profile][player]
+            arrays.append(payoff_matrix)
+        return arrays
+
     @classmethod
     def from_arrays(cls, *arrays, title: str = "Untitled strategic game") -> Game:
         """Create a new ``Game`` with a strategic representation.
@@ -323,6 +361,7 @@ class Game:
         See Also
         --------
         from_dict : Create strategic game and set player labels
+        to_arrays : Create list of numpy arrays from game
         """
         g = cython.declare(Game)
         arrays = [np.array(a) for a in arrays]
@@ -362,6 +401,7 @@ class Game:
         See Also
         --------
         from_arrays : Create game from list-like of array-like
+        to_arrays : Create list of numpy arrays from game
         """
         g = cython.declare(Game)
         payoffs = {k: np.array(v) for k, v in payoffs.items()}
