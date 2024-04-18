@@ -295,10 +295,15 @@ class Game:
         g.title = title
         return g
 
-    def to_arrays(self) -> typing.List[np.ndarray]:
+    def to_arrays(self, dtype: Union[str, np.dtype, Type] = float) -> typing.List[np.ndarray]:
         """Create a list of numpy arrays from the game.
         These arrays correspond to the payoff matrices of the players of a game.
         Can only be used on games in in strategic form.
+
+        Parameters
+        ----------
+        dtype : Union[str, np.dtype, Type], optional
+            The type of numpy array to use for the payoff matrices. Default to float.
 
         Returns
         -------
@@ -321,7 +326,7 @@ class Game:
         arrays = []
         payoff_shape = [len(player.strategies) for player in self.players]
         for player in self.players:
-            payoff_matrix = np.zeros(shape=payoff_shape)
+            payoff_matrix = np.zeros(shape=payoff_shape, dtype=dtype)
             for profile in itertools.product(*(range(s) for s in payoff_shape)):
                 payoff_matrix[profile] = self[profile][player]
             arrays.append(payoff_matrix)
